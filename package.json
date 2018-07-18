@@ -1,0 +1,32 @@
+{
+  "name": "proxy-multi-registries",
+  "version": "1.1.0",
+  "description": "Reverse proxy of multiple registries with priorities",
+  "bin": "./bin/server.js",
+  "main": "./bin/server.js",
+  "scripts": {
+    "start": "node .",
+    "test": "exit 0",
+    "update-coc": "weallbehave -o . && git add CODE_OF_CONDUCT.md && git commit -m 'docs(coc): updated CODE_OF_CONDUCT.md'",
+    "update-contrib": "weallcontribute -o . && git add CONTRIBUTING.md && git commit -m 'docs(contributing): updated CONTRIBUTING.md'"
+  },
+  "keywords": [],
+  "author": "Xu Yiming <xuyiming.open@outlook.com>",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "yargs": "^13.2.4"
+  },
+  "devDependencies": {
+    "weallbehave": "*",
+    "weallcontribute": "*"
+  },
+  "bundleDependencies": [
+    "node-fetch",
+    "yargs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xymopen/proxy-multi-registries.git"
+  }
+}
