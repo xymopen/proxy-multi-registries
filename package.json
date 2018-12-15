@@ -1,11 +1,11 @@
 {
-  "name": "proxy-registry",
-  "version": "1.0.3",
+  "name": "proxy-multi-registries",
+  "version": "1.0.0",
   "description": "",
   "bin": "server.js",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js --no-shell",
+    "start": "node server.js",
     "test": "exit 0",
     "prerelease": "npm t",
     "release": "standard-version -s",
@@ -18,16 +18,13 @@
   "author": "Rebecca Turner <me@re-becca.org> (http://re-becca.org/)",
   "license": "ISC",
   "dependencies": {
-    "@iarna/cli": "^2.0.2",
-    "@perl/qr": "^1.2.0",
-    "@perl/qx": "^1.0.2",
     "koa": "^2.5.2",
     "koa-compress": "^3.0.0",
     "koa-json-error": "^3.1.2",
     "koa-logger": "^3.2.0",
-    "make-fetch-happen": "^4.0.1",
-    "pacote": "^9.0.0",
-    "yargs": "^12.0.1"
+    "koa-router": "^7.4.0",
+    "node-fetch": "^2.3.0",
+    "yargs": "^12.0.5"
   },
   "devDependencies": {
     "weallbehave": "*",
@@ -36,27 +33,19 @@
     "standard-version": "*"
   },
   "bundleDependencies": [
-    "@iarna/cli",
-    "@perl/qr",
-    "@perl/qx",
     "koa",
     "koa-compress",
+    "koa-router",
     "koa-json-error",
     "koa-logger",
-    "make-fetch-happen",
-    "pacote",
+    "node-fetch",
     "yargs"
+  ],
+  "files": [
+    "server.js"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/npm/proxy-registry.git"
-  },
-  "files": [
-    "always-json.js",
-    "config.js",
-    "fetch-packument.js",
-    "server.js"
-  ],
-  "bugs": "https://github.com/npm/proxy-registry/issues",
-  "homepage": "https://npmjs.com/package/proxy-registry"
+    "url": "https://github.com/xymopen/proxy-multi-registries.git"
+  }
 }
