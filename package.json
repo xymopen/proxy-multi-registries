@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^2.6.0",
+    "validate-npm-package-name": "^3.0.0",
     "yargs": "^13.2.4"
   },
   "devDependencies": {
@@ -29,6 +30,7 @@
   },
   "bundleDependencies": [
     "node-fetch",
+    "validate-npm-package-name",
     "yargs"
   ],
   "repository": {
