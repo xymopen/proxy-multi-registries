@@ -1,117 +1,187 @@
-#!/usr/bin/env node
+#!/usr/bin/node
+
 'use strict'
-require('@iarna/cli')(main)
-  .option('port', {
-    describe: 'the port to listen on',
-    type: 'number',
-    default: 22000
-  })
-  .option('shell', {
-    describe: 'run a shell configured to talk to this proxy',
-    type: 'boolean',
-    default: true
-  })
-  .option('log', {
-    describe: 'log requests (defaults to off when running a shell, on when not)',
-    type: 'boolean'
-  })
 
-const spawn = require('child_process').spawn
-const pacote = require('pacote')
-const fetch = require('make-fetch-happen')
-const qr = require('@perl/qr')
 const http = require('http')
+const URL = require('url').URL
 
-const Koa = require('koa')
-const compress = require('koa-compress')
-const logger = require('koa-logger')
-const alwaysJson = require('./always-json.js')
-const fetchPackument = require('./fetch-packument.js')
+const yargs = require('yargs')
 
-const conf = require('./config.js')
+const { mergePackuments, indexed } = require('../lib/misc.js')
+const PackageCache = require('../lib/package-cache.js').default
+const RegistryClient = require('../lib/registry-client.js').default
+const RegistryServer = require('../lib/registry-server.js').default
 
-const registry = conf.npm.registry.replace(/[/]$/, '')
+/**
+ * @param {{
+ *  address: string,
+ *  port: number,
+ *  registries: RegistryClient[],
+ *  default: RegistryClient
+ * }} argv
+ */
+const startApp = async (argv) => {
+  const base = `http://${argv.address}:${argv.port}/`
 
-const matchName = qr`(?:@[^/+]/)?[^/]+`
-const matchVersion = qr`\d+\.\d+\.\d+(?:-.*)?`
-const matchTarball = qr`^/(${matchName})/-/.*?-(${matchVersion})\.tgz$`
-const matchManifest = qr`^/(${matchName})$`
+  const backends = argv.registries
+  const df = argv.default
 
-async function main (opts, ...args) {
-  if (opts.log == null) opts.log = !opts.shell
-  const app = new Koa()
-  if (opts.log) app.use(logger())
-  app.use(alwaysJson())
-  app.use(compress())
-  app.use(handleRequest)
-  const srv = http.createServer(app.callback()).listen(opts.port)
+  const pkgCache = new PackageCache()
+
+  const srv = http.createServer(async (req, res) => {
+    const reqUrl = new URL(req.url, base)
+    const cls = RegistryClient.classify(reqUrl.pathname)
+
+    if (cls) {
+      const { type, package: pkg } = cls
+
+      /** @type {Iterable<[RegistryClient, number]>} */
+      // @ts-ignore
+      const indexedBackends = indexed(backends)
+
+      if (type === 'package-root') {
+        const packuments = []
+
+        console.log(`Resolving ${pkg}`)
+
+        for (const [backend, priority] of indexedBackends) {
+          try {
+            const packument = await backend.getPackage(pkg)
+
+            for (const ver of Object.keys(packument.versions)) {
+              pkgCache.addPkgVer(pkg, ver, priority)
+              packuments.push(packument)
+            }
+          } catch (ignored) {
+            pkgCache.deletePkg(pkg, priority)
+          }
+        }
+
+        if (packuments.length > 0) {
+          console.log(`Succeed in resolving ${pkg}`)
+
+          return RegistryServer.ok(res, mergePackuments(packuments))
+        } else {
+          console.error(`Fail to resolve ${pkg}. No registries has such package`)
+
+          return RegistryServer.notfound(res)
+        }
+      } else if (type === 'package-version') {
+        const ver = cls.version
+        console.log(`Resolving ${pkg}@${ver}`)
+
+        if (pkgCache.hasPkgVer(pkg, ver)) {
+          const backend = backends[pkgCache.getPkgVer(pkg, ver)]
+
+          console.log('Cache hits')
+          console.log(`Redirect ${pkg}@${ver} to ${backend.root.hostname}`)
+
+          return RegistryServer.redirect(res, reqUrl, backend)
+        } else {
+          console.log('Cache misses')
+
+          for (const [backend, priority] of indexedBackends) {
+            if (await backend.hasPackageVerison(pkg, ver)) {
+              pkgCache.addPkgVer(pkg, ver, priority)
+              console.log(`Redirect ${pkg}@${ver} to ${backend.root.hostname}`)
+
+              return RegistryServer.redirect(res, reqUrl, backend)
+            }
+          }
+        }
+
+        console.error(`Fail resolving ${pkg}@${ver}. No registries has such package`)
+
+        return RegistryServer.notfound(res)
+      }
+    }
+
+    console.log(`Redirect ${reqUrl} to ${df.root.hostname}`)
+
+    RegistryServer.redirect(res, reqUrl, df)
+  }).listen(argv.port, argv.address)
+
+  console.log(`Using registries: ${backends.map(backend => backend.root).join(', ')}`)
+  console.log(`Using default registy: ${df.root}`)
+  console.log(`Listening on: ${base}`)
+
+  console.log(`To use: npm config set registry ${base}`)
+  console.log('^C to close server')
 
   await new Promise((resolve, reject) => {
-    app.on('error', reject)
+    process.on('SIGINT', resolve)
     srv.on('error', reject)
-    if (opts.shell) {
-      process.env['npm_config_registry'] = `http://127.0.0.1:${opts.port}`
-      console.log(`Starting subshell configured to talk to: http://127.0.0.1:${opts.port}`)
-      console.log(`To close server, run: exit`)
-      spawn(conf.npm.shell, [], {stdio: 'inherit'})
-        .on('close', er => er ? reject(er) : resolve())
-    } else {
-      console.log(`Listening on: http://127.0.0.1:${opts.port}`)
-      console.log(`To use: npm config set registry http://127.0.0.1:${opts.port}`)
-      console.log(`^C to close server`)
-      process.on('SIGINT', resolve)
+  })
+
+  srv.close()
+
+  console.warn('\nShutting down')
+}
+
+yargs
+  .options({
+    address: {
+      type: 'string',
+      alias: 'a',
+      default: 'localhost',
+      describe: 'the address to bind to'
+    },
+    port: {
+      type: 'number',
+      alias: 'p',
+      default: 22000,
+      describe: 'the port to listen on'
+    },
+    registries: {
+      type: 'array',
+      alias: 'r',
+      describe: 'the backend registries',
+      demandOption: true,
+      coerce: registries => registries.map(registry => new RegistryClient(registry))
+    },
+    default: {
+      type: 'string',
+      alias: 'd',
+      describe: 'the registry used other than fetching packages',
+      coerce: dft => new RegistryClient(dft)
+    },
+    help: {
+      type: 'boolean',
+      alias: 'h',
+      describe: 'show help'
+    },
+    version: {
+      type: 'boolean',
+      alias: 'v',
+      describe: 'show version number'
     }
   })
-  console.error('\nShutting down')
-  srv.close()
-}
-
-async function handleRequest (ctx, next) {
-  const requestConfig = Object.assign({}, conf.pacote, {headers: ctx.request.header})
-  delete requestConfig.headers.host
-  requestConfig.method = ctx.request.method
-
-  try {
-    if (matchTarball.test(ctx.request.url)) {
-      await fetchTarball(ctx, requestConfig)
-    } else if (matchManifest.test(ctx.request.url)) {
-      await fetchManifest(ctx, requestConfig)
-    } else {
-      const result = await proxyRequest(ctx.request.url, ctx, requestConfig)
-      ctx.response.body = result.body
+  .parse(process.argv.slice(2), async (err, argv, msg) => {
+    // arguments validation failed
+    if (err && msg) {
+      console.error(msg)
+      process.exitCode = 1
+      return
     }
-  } catch (ex) {
-    console.error(ex)
-    ctx.response.status = 404
-    ctx.response.body = JSON.stringify(ex)
-  }
-  await next()
-}
 
-function fetchTarball (ctx, requestConfig) {
-  const [, name, version] = matchTarball.exec(ctx.request.url)
-  ctx.response.body = pacote.tarball.stream(`${name}@${version}`, requestConfig)
-}
+    // help or version info
+    if (msg) {
+      console.log(msg)
+      return
+    }
 
-async function fetchManifest (ctx, requestConfig) {
-  const [, name] = matchManifest.exec(ctx.request.url)
-  const body = await fetchPackument(name.replace(/%2f/ig, '/'), requestConfig)
-  for (let version of Object.keys(body.versions)) {
-    let vv = body.versions[version]
-    vv.dist.tarball = vv.dist.tarball.replace(qr.g`${registry}`, `http://127.0.0.1:22000`)
-  }
-  ctx.response.body = JSON.stringify(body)
-}
+    if (undefined === argv.default) {
+      argv.default = argv.registries[0]
+    }
 
-async function proxyRequest (url, ctx, requestConfig) {
-  if (requestConfig.method === 'PUT' || requestConfig.method === 'POST') requestConfig.body = ctx.req
+    try {
+      await startApp(argv)
+    } catch (err) {
+      console.error(err.message)
+    }
+  })
 
-  const result = await fetch(`${registry}${url}`, requestConfig)
-  for (let header of result.headers.entries()) {
-    const [key, value] = header
-    if (key === 'transfer-encoding' || key === 'content-encoding' || key === 'content-length' || key === 'connection') continue
-    ctx.response.set(key, value)
-  }
-  ctx.response.status = result.status
-  return result
-}
+/**
+ * @typedef {import('../lib/registry-client.js').default} RegistryClient
+ * @typedef {import('../lib/registry-client.js').PackumentRoot} PackumentRoot
+ */
