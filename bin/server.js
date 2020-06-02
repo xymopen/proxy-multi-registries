@@ -29,17 +29,17 @@ const startApp = async (argv) => {
   const pkgCache = new PackageCache()
 
   const srv = http.createServer(async (req, res) => {
-    const reqUrl = new URL(req.url, base)
+    const reqUrl = new URL(/** @type {string} */ (req.url), base)
     const cls = RegistryClient.classify(reqUrl.pathname)
 
     if (cls) {
-      const { type, package: pkg } = cls
+      const { package: pkg } = cls
 
       /** @type {Iterable<[RegistryClient, number]>} */
       // @ts-ignore
       const indexedBackends = indexed(backends)
 
-      if (type === 'package-root') {
+      if (cls.type === 'package-root') {
         const packuments = []
 
         console.log(`Resolving ${pkg}`)
@@ -66,7 +66,7 @@ const startApp = async (argv) => {
 
           return RegistryServer.notfound(res)
         }
-      } else if (type === 'package-version') {
+      } else if (cls.type === 'package-version') {
         const ver = cls.version
         console.log(`Resolving ${pkg}@${ver}`)
 
@@ -137,13 +137,15 @@ yargs
       alias: 'r',
       describe: 'the backend registries',
       demandOption: true,
-      coerce: registries => registries.map(registry => new RegistryClient(registry))
+      coerce: /** @param {string[]} registries */ registries =>
+        registries.map(registry => new RegistryClient(registry))
     },
     default: {
       type: 'string',
       alias: 'd',
       describe: 'the registry used other than fetching packages',
-      coerce: dft => new RegistryClient(dft)
+      coerce: /** @param {string} registries */ dft =>
+        new RegistryClient(dft)
     },
     help: {
       type: 'boolean',
@@ -156,7 +158,7 @@ yargs
       describe: 'show version number'
     }
   })
-  .parse(process.argv.slice(2), async (err, argv, msg) => {
+  .parse(process.argv.slice(2), undefined, async (err, argv, msg) => {
     // arguments validation failed
     if (err && msg) {
       console.error(msg)
