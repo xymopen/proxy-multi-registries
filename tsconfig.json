@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": false,
+    "noEmit": true,
+    "lib": [
+      "esnext"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "**/*.js",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
