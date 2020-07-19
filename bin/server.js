@@ -158,7 +158,7 @@ yargs
       describe: 'show version number'
     }
   })
-  .parse(process.argv.slice(2), undefined, async (err, argv, msg) => {
+  .parse(process.argv.slice(2), async (err, argv, msg) => {
     // arguments validation failed
     if (err && msg) {
       console.error(msg)
