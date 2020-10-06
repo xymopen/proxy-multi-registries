@@ -6,7 +6,7 @@
   "main": "./bin/server.js",
   "scripts": {
     "start": "node .",
-    "lint": "eslint -c ./.eslintrc.json **/*.js && tsc --build tsconfig.json",
+    "lint": "eslint -c .eslintrc.json *.js && tsc --noEmit --project tsconfig.json",
     "test": "exit 0"
   },
   "keywords": [],
