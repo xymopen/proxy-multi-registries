@@ -13,12 +13,7 @@ const RegistryClient = require('../lib/registry-client.js').default
 const RegistryServer = require('../lib/registry-server.js').default
 
 /**
- * @param {{
- *  address: string,
- *  port: number,
- *  registries: RegistryClient[],
- *  default: RegistryClient
- * }} argv
+ * @param {StartAppParam} argv
  */
 const startApp = async (argv) => {
   const base = `http://${argv.address}:${argv.port}/`
@@ -144,7 +139,7 @@ yargs
       type: 'string',
       alias: 'd',
       describe: 'the registry used other than fetching packages',
-      coerce: /** @param {string} registries */ dft =>
+      coerce: /** @param {string} dft */ dft =>
         new RegistryClient(dft)
     },
     help: {
@@ -153,7 +148,7 @@ yargs
       describe: 'show help'
     }
   })
-  .parse(process.argv.slice(2), async (err, argv, msg) => {
+  .parse(process.argv.slice(2), {}, async (err, argv, msg) => {
     // arguments validation failed
     if (err && msg) {
       console.error(msg)
@@ -172,13 +167,22 @@ yargs
     }
 
     try {
+      // TS cannot see that we have assign a default value to argv.default
+      // @ts-expect-error
       await startApp(argv)
     } catch (err) {
-      console.error(err.message)
+      console.error((/** @type {Error} */ (err)).message)
     }
   })
 
 /**
- * @typedef {import('../lib/registry-client.js').default} RegistryClient
+ * @typedef StartAppParam
+ * @property {string} address
+ * @property {number} port
+ * @property {RegistryClient[]} registries
+ * @property {RegistryClient} default
+ */
+
+/**
  * @typedef {import('../lib/registry-client.js').PackumentRoot} PackumentRoot
  */
