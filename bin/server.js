@@ -151,11 +151,6 @@ yargs
       type: 'boolean',
       alias: 'h',
       describe: 'show help'
-    },
-    version: {
-      type: 'boolean',
-      alias: 'v',
-      describe: 'show version number'
     }
   })
   .parse(process.argv.slice(2), async (err, argv, msg) => {

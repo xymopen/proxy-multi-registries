@@ -14,12 +14,12 @@ To use: npm config set registry http://localhost:22000
 
 ``` console
 Options:
-  --help, -h        show help                                          [boolean]
-  --version, -v     show version number                                [boolean]
-  --address, -a     the address to bind to       [string] [default: "localhost"]
-  --port, -p        the port to listen on              [number] [default: 22000]
-  --registries, -r  the backend registries                               [array]
-  --default, -d     the registry used other than fetching packages      [string]
+   -h, --help        show help                                          [boolean]
+       --version     show version number                                [boolean]
+   -a, --address     the address to bind to       [string] [default: "localhost"]
+   -p, --port        the port to listen on              [number] [default: 22000]
+   -r, --registries  the backend registries                               [array]
+   -d, --default     the registry used other than fetching packages      [string]
 ```
 
 ## TODO
