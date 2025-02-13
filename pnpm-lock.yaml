@@ -22,23 +22,23 @@ importers:
         version: 17.7.2
     devDependencies:
       '@types/node':
-        specifier: ^10.17.60
-        version: 10.17.60
+        specifier: ts5.7
+        version: 22.13.2
       '@types/node-fetch':
-        specifier: ^2.6.4
-        version: 2.6.4
+        specifier: ts5.7
+        version: 2.6.12
       '@types/validate-npm-package-name':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ts5.7
+        version: 4.0.2
       '@types/yargs':
-        specifier: ^17.0.24
-        version: 17.0.24
+        specifier: ts5.7
+        version: 17.0.33
       eslint:
         specifier: ^8.46.0
         version: 8.46.0
       eslint-config-standard:
         specifier: ^17.1.0
-        version: 17.1.0(eslint-plugin-import@2.28.0)(eslint-plugin-n@15.0.0)(eslint-plugin-promise@6.1.1)(eslint@8.46.0)
+        version: 17.1.0(eslint-plugin-import@2.28.0(eslint@8.46.0))(eslint-plugin-n@15.0.0(eslint@8.46.0))(eslint-plugin-promise@6.1.1(eslint@8.46.0))(eslint@8.46.0)
       eslint-plugin-import:
         specifier: ^2.28.0
         version: 2.28.0(eslint@8.46.0)
@@ -49,8 +49,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(eslint@8.46.0)
       typescript:
-        specifier: ^5.1.6
-        version: 5.1.6
+        specifier: ~5.7.2
+        version: 5.7.3
 
 packages:
 
@@ -102,20 +102,20 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/node-fetch@2.6.4':
-    resolution: {integrity: sha512-1ZX9fcN4Rvkvgv4E6PAY5WXUFWFcRWxZa3EW83UjycOB9ljJCedb2CupIP4RZMEwF/M3eTcCihbBRgwtGbg5Rg==}
+  '@types/node-fetch@2.6.12':
+    resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
 
-  '@types/node@10.17.60':
-    resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
+  '@types/node@22.13.2':
+    resolution: {integrity: sha512-Z+r8y3XL9ZpI2EY52YYygAFmo2/oWfNSj4BCpAXE2McAexDk8VcnBMGC9Djn9gTKt4d2T/hhXqmPzo4hfIXtTg==}
 
-  '@types/validate-npm-package-name@4.0.0':
-    resolution: {integrity: sha512-RpO62vB2lkjEkyLbwTheA2+uwYmtVMWTr/kWRI++UAgVdZqNqdAuIQl/SxBCGeMKfdjWaXPbyhZbiCc4PAj+KA==}
+  '@types/validate-npm-package-name@4.0.2':
+    resolution: {integrity: sha512-lrpDziQipxCEeK5kWxvljWYhUvOiB2A9izZd9B2AFarYAkqZshb4lPbRs7zKEic6eGtH8V/2qJW+dPp9OtF6bw==}
 
   '@types/yargs-parser@21.0.0':
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
 
-  '@types/yargs@17.0.24':
-    resolution: {integrity: sha512-6i0aC7jV6QzQB8ne1joVZ0eSFIstHsCrobmOtghM11yGlH0j43FKL2UhWdELkyps0zuf7qVTUVCCR+tgSlyLLw==}
+  '@types/yargs@17.0.33':
+    resolution: {integrity: sha512-WpxBCKWPLr4xSsHgz511rFJAM+wS28w2zEO1QDNY5zM/S8ok70NNfztH0xwhqKyaK0OHCbN98LDAZuy1ctxDkA==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -429,8 +429,8 @@ packages:
   for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
 
-  form-data@3.0.1:
-    resolution: {integrity: sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg==}
+  form-data@4.0.1:
+    resolution: {integrity: sha512-tzN8e4TX8+kkxGPK8D5u0FNmjPUjw3lwC9lSLxxoB/+GtsJG91CO8bSWy73APlgAZzZbXEYZJuxjkHH2w+Ezhw==}
     engines: {node: '>= 6'}
 
   fs.realpath@1.0.0:
@@ -855,13 +855,16 @@ packages:
   typed-array-length@1.0.4:
     resolution: {integrity: sha512-KjZypGq+I/H7HI5HlOoGHkWUUGq+Q0TPhQurLbyrVrvnKTBgzLhIJ7j6J/XTQOi0d1RjyZ0wdas8bKs2p0x3Ng==}
 
-  typescript@5.1.6:
-    resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
+
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
@@ -967,18 +970,20 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/node-fetch@2.6.4':
+  '@types/node-fetch@2.6.12':
     dependencies:
-      '@types/node': 10.17.60
-      form-data: 3.0.1
+      '@types/node': 22.13.2
+      form-data: 4.0.1
 
-  '@types/node@10.17.60': {}
+  '@types/node@22.13.2':
+    dependencies:
+      undici-types: 6.20.0
 
-  '@types/validate-npm-package-name@4.0.0': {}
+  '@types/validate-npm-package-name@4.0.2': {}
 
   '@types/yargs-parser@21.0.0': {}
 
-  '@types/yargs@17.0.24':
+  '@types/yargs@17.0.33':
     dependencies:
       '@types/yargs-parser': 21.0.0
 
@@ -1187,7 +1192,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-config-standard@17.1.0(eslint-plugin-import@2.28.0)(eslint-plugin-n@15.0.0)(eslint-plugin-promise@6.1.1)(eslint@8.46.0):
+  eslint-config-standard@17.1.0(eslint-plugin-import@2.28.0(eslint@8.46.0))(eslint-plugin-n@15.0.0(eslint@8.46.0))(eslint-plugin-promise@6.1.1(eslint@8.46.0))(eslint@8.46.0):
     dependencies:
       eslint: 8.46.0
       eslint-plugin-import: 2.28.0(eslint@8.46.0)
@@ -1205,6 +1210,7 @@ snapshots:
   eslint-module-utils@2.8.0(eslint-import-resolver-node@0.3.7)(eslint@8.46.0):
     dependencies:
       debug: 3.2.7
+    optionalDependencies:
       eslint: 8.46.0
       eslint-import-resolver-node: 0.3.7
     transitivePeerDependencies:
@@ -1383,7 +1389,7 @@ snapshots:
     dependencies:
       is-callable: 1.2.7
 
-  form-data@3.0.1:
+  form-data@4.0.1:
     dependencies:
       asynckit: 0.4.0
       combined-stream: 1.0.8
@@ -1820,7 +1826,7 @@ snapshots:
       for-each: 0.3.3
       is-typed-array: 1.1.12
 
-  typescript@5.1.6: {}
+  typescript@5.7.3: {}
 
   unbox-primitive@1.0.2:
     dependencies:
@@ -1828,6 +1834,8 @@ snapshots:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+
+  undici-types@6.20.0: {}
 
   uri-js@4.4.1:
     dependencies:
