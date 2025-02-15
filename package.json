@@ -6,28 +6,25 @@
   "main": "./bin/server.js",
   "scripts": {
     "start": "node .",
-    "lint": "eslint -c .eslintrc.json **/*.js && tsc --noEmit --project tsconfig.json",
+    "lint": "eslint -c eslint.config.js **/*.js && tsc --noEmit --project tsconfig.json",
     "test": "exit 0"
   },
   "keywords": [],
   "author": "Xu Yiming <xuyiming.open@outlook.com>",
   "license": "ISC",
   "dependencies": {
-    "eslint-plugin-n": "15.0.0",
     "node-fetch": "^2.6.12",
     "validate-npm-package-name": "^4.0.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.19.0",
     "@types/node": "ts5.7",
     "@types/node-fetch": "ts5.7",
     "@types/validate-npm-package-name": "ts5.7",
     "@types/yargs": "ts5.7",
-    "eslint": "^8.46.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
     "typescript": "~5.7.2"
   },
   "bundleDependencies": [
